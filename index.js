@@ -41,7 +41,7 @@ export async function n3reasoner(data, query, onlyDerivations = true) {
     const json = JSON.parse(response);
 
     // Return the result
-    return json.output;
+    return json.success || json.error;
 }
 
 export default {

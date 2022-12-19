@@ -3,6 +3,7 @@
   "version": "1.0.2",
   "description": "EYE mock solving your n3 reasoning on a server instead of client side Prolog execution",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

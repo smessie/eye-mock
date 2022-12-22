@@ -1,3 +1,3 @@
 declare module "eye-mock" {
-    export function n3reasoner(data: string, query: string, onlyDerivations?: boolean): string;
+    export function n3reasoner(data: string, query: string, onlyDerivations?: boolean): Promise<string>;
 }

@@ -16,7 +16,7 @@ export async function n3reasoner(data, query, onlyDerivations = true) {
         )}`
     );
 
-    let result = await fetch("http://ppr.cs.dal.ca:3002/n3", {
+    let result = await fetch("https://eye-api.smessie.com/n3", {
         headers: {
             "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
         },

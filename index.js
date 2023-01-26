@@ -1,4 +1,15 @@
-export async function n3reasoner(data, query, onlyDerivations = true) {
+export async function n3reasoner(data, query, options = {}) {
+    // Check options
+    const unknownOptions = Object.keys(options).filter(
+        (key) => !["onlyDerivations", "blogic"].includes(key)
+    );
+    if (unknownOptions.length > 0) {
+        throw new Error(
+            "Unknown options: " + unknownOptions.join(", ")
+        );
+    }
+    const { onlyDerivations = true, blogic = false } = options;
+
     // Document and query to body of request
     const inputBody = [];
     inputBody.push(
@@ -12,9 +23,14 @@ export async function n3reasoner(data, query, onlyDerivations = true) {
 
     inputBody.push(
         `${encodeURIComponent("formula")}=${encodeURIComponent(
-            `${data}\n${query}`
+            blogic ? data : `${data}\n${query}`
         )}`
     );
+    if (blogic) {
+        inputBody.push(
+            `${encodeURIComponent("blogic")}=${encodeURIComponent(true)}`
+        );
+    }
 
     let result = await fetch("https://eye-api.smessie.com/n3", {
         headers: {

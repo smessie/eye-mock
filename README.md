@@ -18,9 +18,21 @@ const data = `
 { ?S a :Person } => { ?S a :Human } .
 `;
 
-const query = `{?S ?P ?O} => {?S ?P ?O}`;
+const query = `{?S ?P ?O . } => {?S ?P ?O . } .`;
 
-const result = await n3reasoner(data,query);
+const options = { output: "derivations", blogic: "false" };
+
+const result = await n3reasoner(data, query, options);
 ```
 
-There is also an optional `onlyDerivations` parameter defaulting to `true`.
+### Options
+
+The `options` parameter is optional and can be used to configure the reasoning process. The following options are available:
+- `output`: What to output.
+  - `derivations`: output only new derived triples, a.k.a `--pass-only-new` (default)
+  - `deductive_closure`: output deductive closure, a.k.a `--pass`
+  - `deductive_closure_plus_rules`: output deductive closure plus rules, a.k.a `--pass-all`
+  - `grounded_deductive_closure_plus_rules`: ground the rules and output deductive closure plus rules, a.k.a `--pass-all-ground`
+- `blogic`: Whether to use the blogic or not. Used to support RDF surfaces.
+  - `true`: use blogic
+  - `false`: do not use blogic (default)

@@ -1,21 +1,24 @@
 export async function n3reasoner(data, query, options = {}) {
     // Check options
     const unknownOptions = Object.keys(options).filter(
-        (key) => !["onlyDerivations", "blogic"].includes(key)
+        (key) => !["output", "blogic"].includes(key)
     );
     if (unknownOptions.length > 0) {
         throw new Error(
             "Unknown options: " + unknownOptions.join(", ")
         );
     }
-    const { onlyDerivations = true, blogic = false } = options;
+    const { output = "derivations", blogic = false } = options;
+
+    // Check if output is valid
+    if (!["derivations", "deductive_closure", "deductive_closure_plus_rules", "grounded_deductive_closure_plus_rules"].includes(output)) {
+        throw new Error("Unknown output option: " + output);
+    }
 
     // Document and query to body of request
     const inputBody = [];
     inputBody.push(
-        `${encodeURIComponent("task")}=${encodeURIComponent(
-            onlyDerivations ? "derivations" : "deductive_closure"
-        )}`
+        `${encodeURIComponent("task")}=${encodeURIComponent(output)}`
     );
     inputBody.push(
         `${encodeURIComponent("system")}=${encodeURIComponent("eye")}`

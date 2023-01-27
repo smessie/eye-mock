@@ -60,7 +60,7 @@ export async function n3reasoner(data, query, options = {}) {
     const json = JSON.parse(response);
 
     // Return the result
-    return json.success.replaceAll("http://n3-editor.org/", "#") || json.error;
+    return json.success?.replaceAll("http://n3-editor.org/", "#") || json.error;
 }
 
 export default {

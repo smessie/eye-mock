@@ -20,7 +20,7 @@ const data = `
 
 const query = `{?S ?P ?O . } => {?S ?P ?O . } .`;
 
-const options = { output: "derivations", blogic: "false" };
+const options = { output: "derivations", blogic: false };
 
 const result = await n3reasoner(data, query, options);
 ```

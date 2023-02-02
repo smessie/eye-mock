@@ -1,18 +1,25 @@
+import {Parser} from "n3";
+
 export async function n3reasoner(data, query, options = {}) {
     // Check options
     const unknownOptions = Object.keys(options).filter(
-        (key) => !["output", "blogic"].includes(key)
+        (key) => !["output", "blogic", "outputType"].includes(key)
     );
     if (unknownOptions.length > 0) {
         throw new Error(
             "Unknown options: " + unknownOptions.join(", ")
         );
     }
-    const { output = "derivations", blogic = false } = options;
+    const { output = "derivations", blogic = false, outputType = "string" } = options;
 
     // Check if output is valid
     if (!["derivations", "deductive_closure", "deductive_closure_plus_rules", "grounded_deductive_closure_plus_rules"].includes(output)) {
         throw new Error("Unknown output option: " + output);
+    }
+
+    // Check if outputType is valid
+    if (!['string', 'quads'].includes(outputType)) {
+        throw new Error(`Invalid outputType: ${outputType}`);
     }
 
     // Document and query to body of request
@@ -23,6 +30,14 @@ export async function n3reasoner(data, query, options = {}) {
     inputBody.push(
         `${encodeURIComponent("system")}=${encodeURIComponent("eye")}`
     );
+
+    // Package only supports input data and query as strings, not as quads. See https://github.com/rdfjs/N3.js/issues/316
+    if (typeof data !== 'string') {
+        throw new Error('Only string input data is currently supported');
+    }
+    if (typeof query !== 'string') {
+        throw new Error('Only string input query is currently supported');
+    }
 
     inputBody.push(
         `${encodeURIComponent("formula")}=${encodeURIComponent(
@@ -60,7 +75,16 @@ export async function n3reasoner(data, query, options = {}) {
     const json = JSON.parse(response);
 
     // Return the result
-    return json.success?.replaceAll("http://n3-editor.org/", "#") || json.error;
+    if (outputType === "string") {
+        return json.success || json.error;
+    } else {
+        if (json.success) {
+            const parser = new Parser({ format: 'text/n3' });
+            return parser.parse(json.success);
+        } else {
+            throw new Error(json.error);
+        }
+    }
 }
 
 export default {

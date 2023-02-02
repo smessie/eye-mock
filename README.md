@@ -10,7 +10,7 @@ npm install eye-mock
 
 Import and use the function in your code
 ```javascript
-import { n3reasoner} from 'eye-mock';
+import { n3reasoner } from 'eye-mock';
 
 const data = `
 @prefix : <urn:example.org:> .
@@ -20,7 +20,7 @@ const data = `
 
 const query = `{?S ?P ?O . } => {?S ?P ?O . } .`;
 
-const options = { output: "derivations", blogic: false };
+const options = { output: "derivations", blogic: false, outputType: "string" };
 
 const result = await n3reasoner(data, query, options);
 ```
@@ -36,3 +36,6 @@ The `options` parameter is optional and can be used to configure the reasoning p
 - `blogic`: Whether to use the blogic or not. Used to support RDF surfaces.
   - `true`: use blogic
   - `false`: do not use blogic (default)
+- `outputType`: The type of output
+  - `string`: output as string (default)
+  - `quads`: output as array of RDF/JS Quads

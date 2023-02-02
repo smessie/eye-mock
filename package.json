@@ -1,6 +1,6 @@
 {
   "name": "eye-mock",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "EYE mock solving your n3 reasoning on a server instead of client side Prolog execution",
   "main": "index.js",
   "types": "index.d.ts",

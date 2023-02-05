@@ -1,6 +1,6 @@
 import {Parser} from "n3";
 
-export async function n3reasoner(data, query, options = {}) {
+export async function n3reasoner(data, query, options) {
     // Check options
     const unknownOptions = Object.keys(options).filter(
         (key) => !["output", "blogic", "outputType"].includes(key)
@@ -10,10 +10,10 @@ export async function n3reasoner(data, query, options = {}) {
             "Unknown options: " + unknownOptions.join(", ")
         );
     }
-    const { output = "derivations", blogic = false, outputType = "string" } = options;
+    const { output = undefined, blogic = false, outputType = "string" } = options;
 
     // Check if output is valid
-    if (!["derivations", "deductive_closure", "deductive_closure_plus_rules", "grounded_deductive_closure_plus_rules"].includes(output)) {
+    if (![undefined, "derivations", "deductive_closure", "deductive_closure_plus_rules", "grounded_deductive_closure_plus_rules"].includes(output)) {
         throw new Error("Unknown output option: " + output);
     }
 
@@ -24,9 +24,11 @@ export async function n3reasoner(data, query, options = {}) {
 
     // Document and query to body of request
     const inputBody = [];
-    inputBody.push(
-        `${encodeURIComponent("task")}=${encodeURIComponent(output)}`
-    );
+    if (output) {
+        inputBody.push(
+            `${encodeURIComponent("task")}=${encodeURIComponent(output)}`
+        );
+    }
     inputBody.push(
         `${encodeURIComponent("system")}=${encodeURIComponent("eye")}`
     );

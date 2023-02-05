@@ -42,13 +42,15 @@ export async function n3reasoner(data, query, options) {
     }
 
     inputBody.push(
-        `${encodeURIComponent("formula")}=${encodeURIComponent(
-            blogic ? data : `${data}\n${query}`
-        )}`
+        `${encodeURIComponent("formula")}=${encodeURIComponent(data)}`
     );
     if (blogic) {
         inputBody.push(
             `${encodeURIComponent("blogic")}=${encodeURIComponent(true)}`
+        );
+    } else {
+        inputBody.push(
+            `${encodeURIComponent("query")}=${encodeURIComponent(query)}`
         );
     }
 

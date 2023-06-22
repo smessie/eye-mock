@@ -37,7 +37,7 @@ export async function n3reasoner(data, query, options) {
     if (typeof data !== 'string') {
         throw new Error('Only string input data is currently supported');
     }
-    if (typeof query !== 'string') {
+    if (typeof query !== 'string' && !(blogic && typeof query === 'undefined')) {
         throw new Error('Only string input query is currently supported');
     }
 

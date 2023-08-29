@@ -3,14 +3,14 @@ import {Parser} from "n3";
 export async function n3reasoner(data, query, options) {
     // Check options
     const unknownOptions = Object.keys(options).filter(
-        (key) => !["output", "blogic", "outputType"].includes(key)
+        (key) => !["output", "outputType"].includes(key)
     );
     if (unknownOptions.length > 0) {
         throw new Error(
             "Unknown options: " + unknownOptions.join(", ")
         );
     }
-    const { output = undefined, blogic = false, outputType = "string" } = options;
+    const { output = undefined, outputType = "string" } = options;
 
     // Check if output is valid
     if (![undefined, "derivations", "deductive_closure", "deductive_closure_plus_rules", "grounded_deductive_closure_plus_rules"].includes(output)) {
@@ -37,18 +37,14 @@ export async function n3reasoner(data, query, options) {
     if (typeof data !== 'string') {
         throw new Error('Only string input data is currently supported');
     }
-    if (typeof query !== 'string' && !(blogic && typeof query === 'undefined')) {
+    if (typeof query !== 'string' && typeof query !== 'undefined') {
         throw new Error('Only string input query is currently supported');
     }
 
     inputBody.push(
         `${encodeURIComponent("formula")}=${encodeURIComponent(data)}`
     );
-    if (blogic) {
-        inputBody.push(
-            `${encodeURIComponent("blogic")}=${encodeURIComponent(true)}`
-        );
-    } else {
+    if (query) {
         inputBody.push(
             `${encodeURIComponent("query")}=${encodeURIComponent(query)}`
         );

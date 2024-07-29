@@ -3,23 +3,28 @@ import {Parser} from "n3";
 export async function n3reasoner(data, query, options) {
     // Check options
     const unknownOptions = Object.keys(options).filter(
-        (key) => !["output", "outputType"].includes(key)
+        (key) => !["output", "outputType", "bnodeRelabeling"].includes(key)
     );
     if (unknownOptions.length > 0) {
         throw new Error(
             "Unknown options: " + unknownOptions.join(", ")
         );
     }
-    const { output = undefined, outputType = "string" } = options;
+    const { output = undefined, outputType = "string", bnodeRelabeling = true } = options;
 
     // Check if output is valid
-    if (![undefined, "derivations", "deductive_closure", "deductive_closure_plus_rules", "grounded_deductive_closure_plus_rules"].includes(output)) {
+    if (![undefined, "derivations", "deductive_closure", "deductive_closure_plus_rules", "grounded_deductive_closure_plus_rules", "none"].includes(output)) {
         throw new Error("Unknown output option: " + output);
     }
 
     // Check if outputType is valid
     if (!['string', 'quads'].includes(outputType)) {
         throw new Error(`Invalid outputType: ${outputType}`);
+    }
+
+    // Check if bnodeRelabeling is valid
+    if (typeof bnodeRelabeling !== 'boolean') {
+        throw new Error(`Invalid bnodeRelabeling: ${bnodeRelabeling}`);
     }
 
     // Document and query to body of request
@@ -31,6 +36,9 @@ export async function n3reasoner(data, query, options) {
     }
     inputBody.push(
         `${encodeURIComponent("system")}=${encodeURIComponent("eye")}`
+    );
+    inputBody.push(
+        `${encodeURIComponent("bnodeRelabeling")}=${encodeURIComponent(bnodeRelabeling)}`
     );
 
     // Package only supports input data and query as strings, not as quads. See https://github.com/rdfjs/N3.js/issues/316

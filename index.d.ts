@@ -1,9 +1,13 @@
 import { Quad } from '@rdfjs/types';
 
 export interface IQueryOptions {
-    blogic?: boolean;
-    outputType?: 'string' | 'quads'
-    output?: undefined | 'derivations' | 'deductive_closure' | 'deductive_closure_plus_rules' | 'grounded_deductive_closure_plus_rules'
+    /**
+     * Whether or not to perform bnodeRelabeling
+     * @default true
+     */
+    bnodeRelabeling?: boolean;
+    outputType?: 'string' | 'quads';
+    output?: 'derivations' | 'deductive_closure' | 'deductive_closure_plus_rules' | 'grounded_deductive_closure_plus_rules' | 'none';
 }
 
 declare module "eye-mock" {
